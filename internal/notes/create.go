@@ -4,9 +4,6 @@ import (
 	"errors"
 	"os"
 	"os/exec"
-	"regexp"
-	"strings"
-	"time"
 )
 
 func Create(filepath string, title string) (string, error) {
@@ -18,12 +15,9 @@ func Create(filepath string, title string) (string, error) {
 		return "", errors.New("title is empty")
 	}
 
-	filename := createFileName(title)
-	filename = filepath + filename
-
-	err := os.WriteFile(filename, []byte{}, 0755)
+	filename, err := createNewNoteFile(filepath, title)
 	if err != nil {
-		panic(err)
+		return "", err
 	}
 
 	cmd := exec.Command("vi", filename)
@@ -32,23 +26,9 @@ func Create(filepath string, title string) (string, error) {
 
 	err = cmd.Run()
 	if err != nil {
-		// TODO: Delete the file
+		os.Remove(filename)
 		return "", err
 	}
 
 	return filename, err
-}
-
-func createFileName(title string) string {
-	formattedTitle := strings.ToLower(title)
-	formattedTitle = replaceSpaces(formattedTitle, "-")
-
-	dateString := time.Now().Format("02012006")
-
-	return dateString + "-" + formattedTitle + ".txt"
-}
-
-func replaceSpaces(s string, char string) string {
-	regex := regexp.MustCompile(`\s+`)
-	return regex.ReplaceAllString(s, char)
 }

@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/joshmalbrecht/note/internal/config"
 	"github.com/joshmalbrecht/note/internal/notes"
 	"github.com/spf13/cobra"
 )
@@ -15,9 +16,14 @@ var addCmd = &cobra.Command{
 			return
 		}
 
+		configurations, err := config.Get()
+		if err != nil {
+			println("unable to read config: " + err.Error())
+		}
+
 		title := args[0]
 
-		created, err := notes.Create("./", title)
+		created, err := notes.Create(configurations.NotesLocation, title)
 		if err != nil {
 			println("Unable to create note: " + err.Error())
 			return
