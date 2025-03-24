@@ -2,23 +2,18 @@ package config
 
 import "os"
 
-const Directory = ".notes"
-const FileName = "confg.json"
-
 func Initialize() error {
-	homeDir, err := os.UserHomeDir()
+	filepath, err := GetDirectory()
 	if err != nil {
 		return err
 	}
-
-	filepath := homeDir + "/" + Directory
 
 	err = os.MkdirAll(filepath, 0755)
 	if err != nil {
 		return err
 	}
 
-	fullFileName := filepath + "/" + FileName
+	fullFileName := filepath + "/" + fileName
 
 	if _, err := os.Stat(fullFileName); os.IsNotExist(err) {
 		file, err := os.Create(fullFileName)
@@ -26,7 +21,7 @@ func Initialize() error {
 			return err
 		}
 
-		_, err = file.WriteString("{\n    \"NotesLocation\":\"~/Documents\"\n}")
+		_, err = file.WriteString("{\n    \"" + notesLocationKey + "\":\"~/Documents\"\n}")
 		if err != nil {
 			return nil
 		}
