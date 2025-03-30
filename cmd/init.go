@@ -7,7 +7,7 @@ import (
 
 var initCmd = &cobra.Command{
 	Use:   "init",
-	Short: "initializes the notes configuration directory and file",
+	Short: "Initializes the notes configuration directory and file",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		err := config.Initialize()
