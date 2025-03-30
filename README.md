@@ -1,6 +1,6 @@
 # Notes-cli
 
-Notes-cli is a command-line interface to for quickly taking and organizing notes.
+Notes-cli is a command-line interface for quickly taking and organizing notes.
 
 ## Getting Started
 
