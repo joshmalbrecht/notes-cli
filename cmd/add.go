@@ -23,13 +23,17 @@ var addCmd = &cobra.Command{
 
 		title := args[0]
 
-		created, err := notes.Create(configurations.NotesLocation, title)
+		filename, created, err := notes.Create(configurations.NotesLocation, title)
 		if err != nil {
 			println("Unable to create note: " + err.Error())
 			return
 		}
 
-		println(created + " has been created")
+		if created {
+			println(filename + " has been created")
+		} else {
+			println("Empty note was not created")
+		}
 	},
 }
 
