@@ -5,13 +5,17 @@ import (
 	"errors"
 	"io"
 	"os"
+	"strings"
 )
 
 const notesLocationKey = "NotesLocation"
 
 type Configuration struct {
 	NotesLocation string `json:"NotesLocation"`
+	FileExtension string `json:"FileExtension"`
 }
+
+const defaultFileExtension string = "md"
 
 func Get() (*Configuration, error) {
 	filepath, err := GetFileAbsolutePath()
@@ -30,13 +34,17 @@ func Get() (*Configuration, error) {
 
 	defer jsonFile.Close()
 
-	byteValue, _ := io.ReadAll(jsonFile)
-	var config Configuration
+	config := Configuration{
+		FileExtension: defaultFileExtension,
+	}
 
+	byteValue, _ := io.ReadAll(jsonFile)
 	err = json.Unmarshal(byteValue, &config)
 	if err != nil {
 		return nil, err
 	}
+
+	config.FileExtension = strings.ReplaceAll(config.FileExtension, ".", "")
 
 	// TODO: Validate that the directory is valid
 	// TODO: Make sure the directory is the absolute value

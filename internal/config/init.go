@@ -1,6 +1,9 @@
 package config
 
-import "os"
+import (
+	"fmt"
+	"os"
+)
 
 func Initialize() error {
 	filepath, err := GetDirectory()
@@ -26,7 +29,7 @@ func Initialize() error {
 			return nil
 		}
 
-		println(fullFileName + " has been created")
+		fmt.Println(fullFileName + " has been created")
 	}
 
 	return nil

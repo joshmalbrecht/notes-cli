@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/joshmalbrecht/note/internal/config"
 	"github.com/joshmalbrecht/note/internal/notes"
 	"github.com/spf13/cobra"
@@ -12,27 +14,27 @@ var addCmd = &cobra.Command{
 	Long:  `Opens the vi text editor to create a new note. After adding your text and closing the editor, note will be saved in the configured directory.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) != 1 {
-			println("Must provide only one argument")
+			fmt.Println("Must provide only one argument")
 			return
 		}
 
 		configurations, err := config.Get()
 		if err != nil {
-			println("unable to read config: " + err.Error())
+			fmt.Println("unable to read config: " + err.Error())
 		}
 
 		title := args[0]
 
-		filename, created, err := notes.Create(configurations.NotesLocation, title)
+		filename, created, err := notes.Create(configurations.NotesLocation, title, configurations.FileExtension)
 		if err != nil {
-			println("Unable to create note: " + err.Error())
+			fmt.Println("Unable to create note: " + err.Error())
 			return
 		}
 
 		if created {
-			println(filename + " has been created")
+			fmt.Println(filename + " has been created")
 		} else {
-			println("Empty note was not created")
+			fmt.Println("Empty note was not created")
 		}
 	},
 }
