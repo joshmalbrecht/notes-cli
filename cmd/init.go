@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/joshmalbrecht/note/internal/config"
 	"github.com/spf13/cobra"
 )
@@ -12,7 +14,7 @@ var initCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		err := config.Initialize()
 		if err != nil {
-			println("unable to initialize: " + err.Error())
+			fmt.Println("unable to initialize: " + err.Error())
 		}
 	},
 }

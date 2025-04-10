@@ -9,7 +9,7 @@ import (
 // Create creates a new note file at the provided filepath with a formatted file name based on the provided title.
 // A text editor command is then run for the user to populate the note with text.
 // If the note is empty after the text editor is closed, the file will be deleted.
-func Create(filepath string, title string) (string, bool, error) {
+func Create(filepath string, title string, fileExtension string) (string, bool, error) {
 	if len(filepath) == 0 {
 		return "", false, errors.New("filepath is empty")
 	}
@@ -18,7 +18,7 @@ func Create(filepath string, title string) (string, bool, error) {
 		return "", false, errors.New("title is empty")
 	}
 
-	filename, err := createNewNoteFile(filepath, title)
+	filename, err := createNewNoteFile(filepath, title, fileExtension)
 	if err != nil {
 		return "", false, err
 	}
