@@ -19,20 +19,33 @@ var editCmd = &cobra.Command{
 		configurations, err := config.Get()
 		if err != nil {
 			fmt.Println("unable to read config: " + err.Error())
-			return
+			os.Exit(1)
 		}
 
 		notes, err := notes.List(configurations.NotesLocation)
 		if err != nil {
 			fmt.Println("unable to retrieve notes: " + err.Error())
-			return
-		}
-
-		program := tea.NewProgram(ui.InitialModel(notes))
-		if _, err := program.Run(); err != nil {
-			fmt.Printf("Alas, there's been an error: %v", err)
 			os.Exit(1)
 		}
+
+		model := ui.InitialModel(notes)
+		program := tea.NewProgram(model)
+		if _, err := program.Run(); err != nil {
+			fmt.Printf("error running selection ui: %v", err)
+			os.Exit(1)
+		}
+
+		var index int
+		for i, val := range model.Selected {
+			if val == struct{}{} {
+				index = i
+				break
+			}
+		}
+
+		var fileName = model.Choices[index]
+		fmt.Println(fileName)
+
 	},
 }
 

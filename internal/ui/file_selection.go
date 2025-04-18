@@ -6,17 +6,17 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-type model struct {
-	choices  []string         // items on the to-do list
-	cursor   int              // which to-do list item our cursor is pointing at
-	selected map[int]struct{} // which to-do items are selected
+type Model struct {
+	Choices  []string         // items on the to-do list
+	Cursor   int              // which to-do list item our cursor is pointing at
+	Selected map[int]struct{} // which to-do items are selected
 }
 
-func (m model) Init() tea.Cmd {
+func (m Model) Init() tea.Cmd {
 	return nil
 }
 
-func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 
 	case tea.KeyMsg:
@@ -27,20 +27,20 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		// The "up" and "k" keys move the cursor up
 		case "up", "k":
-			if m.cursor > 0 {
-				m.cursor--
+			if m.Cursor > 0 {
+				m.Cursor--
 			}
 
 		// The "down" and "j" keys move the cursor down
 		case "down", "j":
-			if m.cursor < len(m.choices)-1 {
-				m.cursor++
+			if m.Cursor < len(m.Choices)-1 {
+				m.Cursor++
 			}
 
 		// The "enter" key and the spacebar (a literal space) toggle
 		// the selected state for the item that the cursor is pointing at.
 		case "enter", " ":
-			m.selected[m.cursor] = struct{}{}
+			m.Selected[m.Cursor] = struct{}{}
 			return m, tea.Quit
 		}
 	}
@@ -48,20 +48,20 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
-func (m model) View() string {
+func (m Model) View() string {
 	s := "Select a note:\n\n"
 
-	for i, choice := range m.choices {
+	for i, choice := range m.Choices {
 
 		// Is the cursor pointing at this choice?
 		cursor := " " // no cursor
-		if m.cursor == i {
+		if m.Cursor == i {
 			cursor = ">" // cursor!
 		}
 
 		// Is this choice selected?
 		checked := " " // not selected
-		if _, ok := m.selected[i]; ok {
+		if _, ok := m.Selected[i]; ok {
 			checked = "x" // selected!
 		}
 
@@ -76,9 +76,9 @@ func (m model) View() string {
 	return s
 }
 
-func InitialModel(files []string) model {
-	return model{
-		choices:  files,
-		selected: make(map[int]struct{}),
+func InitialModel(files []string) Model {
+	return Model{
+		Choices:  files,
+		Selected: make(map[int]struct{}),
 	}
 }

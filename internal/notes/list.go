@@ -3,26 +3,43 @@ package notes
 import (
 	"os"
 	paths "path/filepath"
+	"sort"
 	"time"
 )
 
+// List returns the files in the provided path in descending order based on the file's modified time
 func List(notesFilePath string) ([]string, error) {
 	notesDirPath := paths.Join(notesFilePath, notesDirName)
 
-	notesToModified := make(map[string]time.Time)
-	walkDir(notesDirPath, &notesToModified)
+	noteToModified := make(map[string]time.Time)
+	walkDir(notesDirPath, &noteToModified)
 
-	// TODO: Sort
-
-	keys := make([]string, 0, len(notesToModified))
-	for key := range notesToModified {
-		keys = append(keys, key)
+	type keyValue struct {
+		Key   string
+		Value time.Time
 	}
 
-	return keys, nil
+	// sort in descending order based on the modifed times
+
+	var keyValues []keyValue
+	for key, value := range noteToModified {
+		keyValues = append(keyValues, keyValue{key, value})
+	}
+
+	sort.Slice(keyValues, func(i, j int) bool {
+		return keyValues[i].Value.After(keyValues[j].Value)
+	})
+
+	result := make([]string, len(keyValues))
+	for i, kv := range keyValues {
+		result[i] = kv.Key
+	}
+
+	return result, nil
 }
 
-// TODO: Rename
+// walkDir recursively traverses the directories and populates the provided map with the file name and the
+// file's modified time
 func walkDir(path string, notes *map[string]time.Time) error {
 	entries, err := os.ReadDir(path)
 	if err != nil {
