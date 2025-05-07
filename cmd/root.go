@@ -30,11 +30,6 @@ var versionCmd = &cobra.Command{
 	Short: "Print the notes-cli version",
 	Long:  `Print the notes-cli version`,
 	Run: func(cmd *cobra.Command, args []string) {
-		version, err := config.GetVersion()
-		if err != nil {
-			fmt.Println("unable to retrieve version: " + err.Error())
-		}
-
-		fmt.Println(version)
+		fmt.Println(config.Version)
 	},
 }
