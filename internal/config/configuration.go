@@ -8,14 +8,15 @@ import (
 	"strings"
 )
 
-const notesLocationKey = "NotesLocation"
-
 type Configuration struct {
-	NotesLocation string `json:"NotesLocation"`
-	FileExtension string `json:"FileExtension"`
+	NotesLocation     string `json:"NotesLocation"`
+	FileExtension     string `json:"FileExtension"`
+	TextEditorCommand string `json:"TextEditorCommand"`
 }
 
+const notesLocationKey = "NotesLocation"
 const defaultFileExtension string = "md"
+const defaultTextEditorCommand string = "vi"
 
 func Get() (*Configuration, error) {
 	filepath, err := GetFileAbsolutePath()
@@ -35,7 +36,8 @@ func Get() (*Configuration, error) {
 	defer jsonFile.Close()
 
 	config := Configuration{
-		FileExtension: defaultFileExtension,
+		FileExtension:     defaultFileExtension,
+		TextEditorCommand: defaultTextEditorCommand,
 	}
 
 	byteValue, _ := io.ReadAll(jsonFile)

@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"os"
+	"os/user"
 )
 
 func Initialize() error {
@@ -24,7 +25,12 @@ func Initialize() error {
 			return err
 		}
 
-		_, err = file.WriteString("{\n    \"" + notesLocationKey + "\":\"~/Documents\"\n}")
+		user, err := user.Current()
+		if err != nil {
+			return err
+		}
+
+		_, err = file.WriteString("{\n    \"" + notesLocationKey + "\":\"" + user.HomeDir + "\"\n}")
 		if err != nil {
 			return nil
 		}

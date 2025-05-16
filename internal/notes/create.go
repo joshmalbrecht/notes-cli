@@ -4,6 +4,8 @@ import (
 	"errors"
 	"os"
 	"os/exec"
+
+	"github.com/joshmalbrecht/note/internal/config"
 )
 
 // Create creates a new note file at the provided filepath with a formatted file name based on the provided title.
@@ -23,7 +25,12 @@ func Create(filepath string, title string, fileExtension string) (string, bool, 
 		return "", false, err
 	}
 
-	cmd := exec.Command("vi", filename)
+	configurations, err := config.Get()
+	if err != nil {
+		return "", false, err
+	}
+
+	cmd := exec.Command(configurations.TextEditorCommand, filename)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 
