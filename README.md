@@ -17,6 +17,9 @@ If the configuration directory does not exist, you can initialize the directory 
 
 The following configurations can be configured in `config.json`:
 
-| Key             | Example Value          | Description                                                         |
+| Key             | Example Values          | Description                                                         |
 | --------------- | ---------------------- | ------------------------------------------------------------------  |
-| "NotesLocation" | "/home/user/Documents" | Defines the absolute directory path where the notes will be stored. |
+| "NotesLocation" | "/home/user" | Defines the absolute path where the notes will be stored. |
+| "FileExtension" | "txt and md" | Defines file extension that will be used to save the notes files. The default value is "md". |
+| "TextEditorCommand" | "vi, nano, and vim" | Command that invokes a text editor with a specified filename as an argument, allowing the user to view and modify the contents of that file. The default value is "vi". |
+
