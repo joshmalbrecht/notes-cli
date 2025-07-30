@@ -22,6 +22,9 @@ func Execute() {
 }
 
 func init() {
+	// Disable the default 'completion' command
+	rootCmd.CompletionOptions.DisableDefaultCmd = true
+
 	rootCmd.AddCommand(versionCmd)
 }
 
