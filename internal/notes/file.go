@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	paths "path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -14,16 +13,17 @@ import (
 )
 
 const notesDirName string = "notes-cli"
-const dateFormat string = "02012006"
 
-func createNewNoteFile(filepath string, title string, fileExtension string) (string, error) {
-	monthDir, err := getMonthDirectory(filepath)
+const dateFormat string = "2006-01-02"
+
+func createNewNoteFile(path string, title string, fileExtension string) (string, error) {
+	monthDir, err := getMonthDirectory(path)
 	if err != nil {
 		return "", nil
 	}
 
 	filename := getNoteFileName(title, fileExtension)
-	filename = paths.Join(monthDir, filename)
+	filename = filepath.Join(monthDir, filename)
 
 	err = os.WriteFile(filename, []byte{}, 0666)
 	if err != nil {
@@ -33,8 +33,8 @@ func createNewNoteFile(filepath string, title string, fileExtension string) (str
 	return filename, nil
 }
 
-func getMonthDirectory(filepath string) (string, error) {
-	monthDir := paths.Join(filepath, notesDirName, strconv.Itoa(time.Now().Year()), strings.ToLower(time.Now().Month().String()))
+func getMonthDirectory(path string) (string, error) {
+	monthDir := filepath.Join(path, notesDirName, strconv.Itoa(time.Now().Year()), strings.ToLower(time.Now().Month().String()))
 	err := os.MkdirAll(monthDir, 0755)
 	if err != nil {
 		return "", err
@@ -43,10 +43,10 @@ func getMonthDirectory(filepath string) (string, error) {
 	return monthDir, nil
 }
 
+// getNoteFileName creates a filename for a provided title and file extension.
 func getNoteFileName(title string, fileExtension string) string {
 	formattedTitle := strings.ToLower(title)
 	formattedTitle = util.ReplaceSpaces(formattedTitle, "-")
-
 	dateString := time.Now().Format(dateFormat)
 
 	return dateString + "-" + formattedTitle + "." + fileExtension
@@ -60,19 +60,19 @@ func getNoteAbsoluteFilePath(filename string) (string, error) {
 		return "", err
 	}
 
-	rootNotesDir := paths.Join(configurations.NotesLocation, notesDirName)
+	rootNotesDir := filepath.Join(configurations.NotesLocation, notesDirName)
 	err = os.MkdirAll(rootNotesDir, 0755)
 	if err != nil {
 		return "", err
 	}
 
 	// TODO: Now find the file in the root notes directory
-	filePath, err := findFile(rootNotesDir, filename)
+	path, err := findFile(rootNotesDir, filename)
 	if err != nil {
 		return "", err
 	}
 
-	return filePath, nil
+	return path, nil
 }
 
 // findFile searches the root directory and all of the children directories for the provided filename. The
