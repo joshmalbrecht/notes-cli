@@ -13,7 +13,6 @@ import (
 )
 
 const notesDirName string = "notes-cli"
-
 const dateFormat string = "2006-01-02"
 
 func createNewNoteFile(path string, title string, fileExtension string) (string, error) {

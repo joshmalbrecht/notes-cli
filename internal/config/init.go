@@ -7,6 +7,8 @@ import (
 )
 
 func Initialize() error {
+	fmt.Println("initializing the configuration file ...")
+
 	filepath, err := GetDirectory()
 	if err != nil {
 		return err

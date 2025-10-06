@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/joshmalbrecht/note/internal/config"
 	"github.com/spf13/cobra"
@@ -15,7 +16,10 @@ var initCmd = &cobra.Command{
 		err := config.Initialize()
 		if err != nil {
 			fmt.Println("unable to initialize: " + err.Error())
+			os.Exit(1)
 		}
+
+		os.Exit(0)
 	},
 }
 
