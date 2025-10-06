@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/joshmalbrecht/note/internal/config"
 	"github.com/joshmalbrecht/note/internal/notes"
@@ -15,12 +16,13 @@ var addCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) != 1 {
 			fmt.Println("Must provide only one argument")
-			return
+			os.Exit(1)
 		}
 
 		configurations, err := config.Get()
 		if err != nil {
 			fmt.Println("unable to read config: " + err.Error())
+			os.Exit(1)
 		}
 
 		title := args[0]
@@ -28,7 +30,7 @@ var addCmd = &cobra.Command{
 		filename, created, err := notes.Create(configurations.NotesLocation, title, configurations.FileExtension)
 		if err != nil {
 			fmt.Println("Unable to create note: " + err.Error())
-			return
+			os.Exit(1)
 		}
 
 		if created {
@@ -36,6 +38,8 @@ var addCmd = &cobra.Command{
 		} else {
 			fmt.Println("Empty note was not created")
 		}
+
+		os.Exit(0)
 	},
 }
 

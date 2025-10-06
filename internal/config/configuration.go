@@ -2,7 +2,6 @@ package config
 
 import (
 	"encoding/json"
-	"errors"
 	"io"
 	"os"
 	"strings"
@@ -18,14 +17,32 @@ const notesLocationKey = "NotesLocation"
 const defaultFileExtension string = "md"
 const defaultTextEditorCommand string = "vi"
 
+func Exists() (bool, error) {
+	filepath, err := GetFileAbsolutePath()
+	if err != nil {
+		return false, err
+	}
+
+	if _, err := os.Stat(filepath); os.IsNotExist(err) {
+		return false, nil
+	}
+
+	return true, nil
+}
+
 func Get() (*Configuration, error) {
 	filepath, err := GetFileAbsolutePath()
 	if err != nil {
 		return nil, err
 	}
 
-	if _, err := os.Stat(filepath); os.IsNotExist(err) {
-		return nil, errors.New("configuration file does not exist")
+	exists, err := Exists()
+	if err != nil {
+		return nil, err
+	}
+
+	if !exists {
+		Initialize()
 	}
 
 	jsonFile, err := os.Open(filepath)
