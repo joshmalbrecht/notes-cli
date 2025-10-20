@@ -3,6 +3,8 @@ package notes
 import (
 	"os"
 	"os/exec"
+
+	"github.com/joshmalbrecht/note/internal/config"
 )
 
 // Edit will open an editor for the file with the provided name.
@@ -12,7 +14,12 @@ func Edit(filename string) error {
 		return err
 	}
 
-	cmd := exec.Command("vi", filepath)
+	configurations, err := config.Get()
+	if err != nil {
+		return err
+	}
+
+	cmd := exec.Command(configurations.TextEditorCommand, filepath)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 
